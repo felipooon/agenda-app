@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agenda de hoy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<h1>Agenda de hoy ({{ hoy }})</h1>
+
+{% if reservas %}
+    <ul>
+        {% for reserva in reservas %}
+           <!-- <li>
+                {{ reserva.hora }} - {{ reserva.paciente.nombre }} - {{ reserva.estado }}
+            </li>-->
+           <li>
+               <strong>{{ reserva.hora }}</strong><br>
+               {{ reserva.paciente.nombre }}<br>
+               Estado: {{ reserva.estado }}
+           </li>
+           <hr>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay reservas para hoy</p>
+{% endif %}
+
+</body>
+</html>
