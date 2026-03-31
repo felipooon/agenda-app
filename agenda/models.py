@@ -38,7 +38,7 @@ class Reserva(models.Model):
         if Reserva.objects.filter(fecha=self.fecha, hora=self.hora).exclude(pk=self.pk).exists():
             raise ValidationError("Ya hay una reserva para esa hora")
 
-        # Validar solapamiento con otras reservas
+        # Validar solapamiento con otras reservas 
         reservas = Reserva.objects.filter(fecha=self.fecha).exclude(pk=self.pk)
         for r in reservas:
             r_inicio = datetime.combine(r.fecha, r.hora)
