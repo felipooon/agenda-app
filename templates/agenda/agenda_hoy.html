@@ -1,30 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Agenda de hoy</title>
+    <title>Agenda</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial; padding: 10px; }
+        .reserva { padding: 10px; margin-bottom: 10px; border-radius: 8px; }
+        .reservado { background: #fff3cd; }
+        .asistio { background: #d4edda; }
+        .no_asistio { background: #f8d7da; }
+        .botones a { margin-right: 10px; }
+        .header { display: flex; justify-content: space-between; align-items: center; }
+    </style>
 </head>
 <body>
 
-<h1>Agenda de hoy ({{ hoy }})</h1>
+<div class="header">
+    <h2>Agenda {{ hoy }}</h2>
+    <a href="{% url 'agregar_reserva' %}">➕ Nueva</a>
+</div>
 
 {% if reservas %}
-    <ul>
-        {% for reserva in reservas %}
-           <li>
-               <strong>{{ reserva.hora }}</strong><br>
-               {{ reserva.paciente.nombre }}<br>
-               Estado: {{ reserva.get_estado_display }}
-               {% if reserva.estado == "reservado" %}
-                    <a href="{% url 'marcar_asistio' reserva.id %}">✅ Asistió</a>
-                    <a href="{% url 'marcar_no_asistio' reserva.id %}">❌ No asist ió</a>
-                {% endif %}
-           </li>
-           <hr>
-        {% endfor %}
-    </ul>
+    {% for reserva in reservas %}
+        <div class="reserva {{ reserva.estado }}">
+            <strong>{{ reserva.hora }}</strong><br>
+            {{ reserva.paciente.nombre }}<br>
+            Estado: {{ reserva.get_estado_display }}
+
+            {% if reserva.estado == "reservado" %}
+                <div class="botones">
+                    <a href="{% url 'marcar_asistio' reserva.id %}">✅</a>
+                    <a href="{% url 'marcar_no_asistio' reserva.id %}">❌</a>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
 {% else %}
-    <p>No hay reservas para hoy</p>
+    <p>No hay reservas hoy</p>
 {% endif %}
 
 </body>

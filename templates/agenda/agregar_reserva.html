@@ -1,0 +1,64 @@
+<h1>Agregar Reserva</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <label>Paciente:</label><br>
+    <input type="text" id="buscar" placeholder="Buscar paciente...">
+    <input type="hidden" name="paciente" id="paciente_id">
+    <small id="mensaje" style="color:red;"></small>
+
+    <ul id="resultados"></ul>
+
+    {{ form.fecha }}
+    {{ form.hora }}
+    {{ form.duracion }}
+
+    <button type="submit">Guardar</button>
+</form>
+
+<script>
+const input = document.getElementById("buscar");
+const resultados = document.getElementById("resultados");
+const pacienteId = document.getElementById("paciente_id");
+
+if (input && resultados && pacienteId) {
+    input.addEventListener("input", async () => {
+        const query = input.value;
+
+        // 🔥 limpiar selección previa SOLO si cambia texto
+        pacienteId.value = "";
+        mensaje.textContent = "Debes seleccionar un paciente de la lista";
+
+        if (query.length < 2) {
+            resultados.innerHTML = "";
+            return;
+        }
+
+        try {
+            const response = await fetch(`/buscar-pacientes/?q=${query}`);
+            const data = await response.json();
+
+            resultados.innerHTML = "";
+
+            data.forEach(p => {
+                const li = document.createElement("li");
+                li.textContent = p.nombre;
+
+                li.onclick = () => {
+                    input.value = p.nombre;
+                    pacienteId.value = p.id;
+                    mensaje.textContent = "";
+                    resultados.innerHTML = "";
+                };
+
+                resultados.appendChild(li);
+            });
+
+        } catch (error) {
+            console.error("Error buscando pacientes:", error);
+        }
+    });
+}
+</script>
+
+<a href="{% url 'agenda_hoy' %}">Volver a agenda</a>

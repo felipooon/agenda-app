@@ -5,4 +5,6 @@ urlpatterns = [
     path("", views.agenda_hoy, name="agenda_hoy"),
     path("reserva/<int:reserva_id>/asistio/", views.marcar_asistio, name="marcar_asistio"),
     path("reserva/<int:reserva_id>/no_asistio/", views.marcar_no_asistio, name="marcar_no_asistio"),
+    path("reserva/nueva/", views.agregar_reserva, name="agregar_reserva"),
+    path("buscar-pacientes/", views.buscar_pacientes, name="buscar_pacientes"),
 ]
