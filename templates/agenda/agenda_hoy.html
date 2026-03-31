@@ -11,13 +11,14 @@
 {% if reservas %}
     <ul>
         {% for reserva in reservas %}
-           <!-- <li>
-                {{ reserva.hora }} - {{ reserva.paciente.nombre }} - {{ reserva.estado }}
-            </li>-->
            <li>
                <strong>{{ reserva.hora }}</strong><br>
                {{ reserva.paciente.nombre }}<br>
-               Estado: {{ reserva.estado }}
+               Estado: {{ reserva.get_estado_display }}
+               {% if reserva.estado == "reservado" %}
+                    <a href="{% url 'marcar_asistio' reserva.id %}">✅ Asistió</a>
+                    <a href="{% url 'marcar_no_asistio' reserva.id %}">❌ No asistió</a>
+                {% endif %}
            </li>
            <hr>
         {% endfor %}
