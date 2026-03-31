@@ -17,7 +17,7 @@
                Estado: {{ reserva.get_estado_display }}
                {% if reserva.estado == "reservado" %}
                     <a href="{% url 'marcar_asistio' reserva.id %}">✅ Asistió</a>
-                    <a href="{% url 'marcar_no_asistio' reserva.id %}">❌ No asistió</a>
+                    <a href="{% url 'marcar_no_asistio' reserva.id %}">❌ No asist ió</a>
                 {% endif %}
            </li>
            <hr>
