@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Agenda</title>
+
+    <form method="get">
+        <input type="date" name="fecha" value="{{ fecha|date:'Y-m-d' }}">
+        <button type="submit">Ver</button>
+    </form>
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body { font-family: Arial; padding: 10px; }
@@ -39,6 +46,9 @@
 {% else %}
     <p>No hay reservas hoy</p>
 {% endif %}
+
+<a href="?fecha={{ fecha_anterior|date:'Y-m-d' }}">⬅ Día anterior</a>
+<a href="?fecha={{ fecha_siguiente|date:'Y-m-d' }}">Día siguiente ➡</a>
 
 </body>
 </html>

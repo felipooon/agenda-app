@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect, get_object_or_404
 from .models import Reserva
-from datetime import date
+from datetime import date, timedelta
 from .forms import ReservaForm
 from django.http import JsonResponse
 from pacientes.models import Paciente
@@ -9,12 +9,20 @@ from django.core.exceptions import ValidationError
 
 
 def agenda_hoy(request):
-    hoy = date.today()
-    reservas = Reserva.objects.filter(fecha=hoy).order_by("hora")
+    fecha_str = request.GET.get("fecha")
+
+    if fecha_str:
+        fecha = date.fromisoformat(fecha_str)
+    else:
+        fecha = date.today()
+
+    reservas = Reserva.objects.filter(fecha=fecha).order_by("hora")
 
     return render(request, "agenda/agenda_hoy.html", {
         "reservas": reservas,
-        "hoy": hoy
+        "fecha": fecha,
+        "fecha_anterior": fecha - timedelta(days=1),
+        "fecha_siguiente": fecha + timedelta(days=1),
     })
 
 def marcar_asistio(request, reserva_id):

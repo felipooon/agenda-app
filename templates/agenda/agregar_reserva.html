@@ -1,14 +1,50 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+.autocomplete-container {
+    position: relative;
+    width: 100%;
+}
+
+#resultados {
+    position: absolute;
+    top: 100%;              /* 🔥 clave */
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-height: 150px;
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 9999;          /* 🔥 importante */
+    border-radius: 6px;
+}
+
+#resultados li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+#resultados li:hover {
+    background-color: #f0f0f0;
+}
+</style>
+</head>
 <h1>Agregar Reserva</h1>
 <form method="post">
     {% csrf_token %}
     {{ form.non_field_errors }}
-    <label>Paciente:</label><br>
-    <input type="text" id="buscar" placeholder="Buscar paciente...">
-    <input type="hidden" name="paciente" id="paciente_id">
+    <label>Paciente:</label>
+    <div class="autocomplete-container">
+        <input type="text" id="buscar" placeholder="Buscar paciente...">
+        <input type="hidden" name="paciente" id="paciente_id">
+        <ul id="resultados"></ul>
+    </div>
     <small id="mensaje" style="color:red;"></small>
 
-    <ul id="resultados"></ul>
-
+    </br>
     {{ form.fecha }}
     {{ form.hora }}
     {{ form.duracion }}
@@ -20,14 +56,19 @@
 const input = document.getElementById("buscar");
 const resultados = document.getElementById("resultados");
 const pacienteId = document.getElementById("paciente_id");
+const mensaje = document.getElementById("mensaje"); // puede no existir
 
 if (input && resultados && pacienteId) {
+
     input.addEventListener("input", async () => {
         const query = input.value;
 
-        // 🔥 limpiar selección previa SOLO si cambia texto
+        // 🔥 limpiar selección previa
         pacienteId.value = "";
-        mensaje.textContent = "Debes seleccionar un paciente de la lista";
+
+        if (mensaje) {
+            mensaje.textContent = "Debes seleccionar un paciente de la lista";
+        }
 
         if (query.length < 2) {
             resultados.innerHTML = "";
@@ -36,9 +77,19 @@ if (input && resultados && pacienteId) {
 
         try {
             const response = await fetch(`/buscar-pacientes/?q=${query}`);
+
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor");
+            }
+
             const data = await response.json();
 
             resultados.innerHTML = "";
+
+            if (data.length === 0) {
+                resultados.innerHTML = "<li>No se encontraron pacientes</li>";
+                return;
+            }
 
             data.forEach(p => {
                 const li = document.createElement("li");
@@ -47,7 +98,11 @@ if (input && resultados && pacienteId) {
                 li.onclick = () => {
                     input.value = p.nombre;
                     pacienteId.value = p.id;
-                    mensaje.textContent = "";
+
+                    if (mensaje) {
+                        mensaje.textContent = "";
+                    }
+
                     resultados.innerHTML = "";
                 };
 
@@ -56,9 +111,17 @@ if (input && resultados && pacienteId) {
 
         } catch (error) {
             console.error("Error buscando pacientes:", error);
+            resultados.innerHTML = "<li>Error al buscar</li>";
         }
     });
 }
+
+// 🔥 cerrar dropdown al hacer click fuera
+document.addEventListener("click", (e) => {
+    if (!e.target.closest(".autocomplete-container")) {
+        resultados.innerHTML = "";
+    }
+});
 </script>
 
 <a href="{% url 'agenda_hoy' %}">Volver a agenda</a>

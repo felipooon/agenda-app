@@ -19,12 +19,6 @@ class Reserva(models.Model):
     estado = models.CharField(max_length=20, choices=ESTADOS, default="reservado")
 
     def clean(self):
-        #fecha_hora = datetime.combine(self.fecha, self.hora)
-        #if fecha_hora < datetime.now():
-            #raise ValidationError("No puedes agendar una reserva en el pasado")
-
-        #if Reserva.objects.filter(fecha=self.fecha, hora=self.hora).exclude(pk=self.pk).exists():
-            #raise ValidationError("Ya hay una reserva para esa hora")    
         # Convertir fecha+hora en datetime consciente de zona
         fecha_hora_inicio = datetime.combine(self.fecha, self.hora)
         fecha_hora_inicio = timezone.make_aware(fecha_hora_inicio, timezone.get_current_timezone())
