@@ -1,6 +1,74 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 15px;
+    background: #f5f5f5;
+}
+
+h1, h2 {
+    margin-top: 0;
+}
+
+.container {
+    max-width: 500px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+input, button, select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button {
+    background: #007bff;
+    color: white;
+    border: none;
+}
+
+button:active {
+    opacity: 0.8;
+}
+
+.btn-secondary {
+    background: #6c757d;
+}
+
+.btn-success {
+    background: #28a745;
+}
+
+.btn-danger {
+    background: #dc3545;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+a {
+    text-decoration: none;
+    color: #007bff;
+}
+
 .autocomplete-container {
     position: relative;
     width: 100%;
@@ -29,28 +97,76 @@
 
 #resultados li:hover {
     background-color: #f0f0f0;
+
+
+
+
 }
+
+button {
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+        }
+
+a.btn-link {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+        padding: 12px;
+        border-radius: 8px;
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+    }
 </style>
 </head>
+<div class="container">
+
 <h1>Agregar Reserva</h1>
-<form method="post">
+
+<form method="post" class="card">
     {% csrf_token %}
     {{ form.non_field_errors }}
-    <label>Paciente:</label>
+
+    <label>Paciente</label>
+
     <div class="autocomplete-container">
         <input type="text" id="buscar" placeholder="Buscar paciente...">
         <input type="hidden" name="paciente" id="paciente_id">
         <ul id="resultados"></ul>
     </div>
-    <small id="mensaje" style="color:red;"></small>
 
-    </br>
+    <a href="{% url 'crear_paciente' %}">
+    <button type="button" class="btn-secondary">
+        + Nuevo paciente
+    </button>
+</a>
+
+    <hr>
+
+    <label>Fecha</label>
     {{ form.fecha }}
+
+    <label>Hora</label>
     {{ form.hora }}
+
+    <label>Duración</label>
     {{ form.duracion }}
 
-    <button type="submit">Guardar</button>
+    <button type="submit" class="btn-success">
+        Guardar reserva
+    </button>
+
 </form>
+
+<a href="{% url 'agenda_hoy' %}" class="btn-link" style="display:block; text-align:center; margin-top:10px;">
+    ← Volver
+</a>
+
+</div>
+
 
 <script>
 const input = document.getElementById("buscar");
@@ -123,5 +239,3 @@ document.addEventListener("click", (e) => {
     }
 });
 </script>
-
-<a href="{% url 'agenda_hoy' %}">Volver a agenda</a>

@@ -3,54 +3,116 @@
 <head>
     <title>Nuevo Paciente</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <style>
-        body { font-family: Arial; padding: 15px; }
-        input, button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            font-size: 16px;
-        }
-        button {
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 6px;
-        }
-        .errorlist {
-            color: red;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 15px;
+        background: #f5f5f5;
+    }
+
+    h1, h2 {
+        margin-top: 0;
+    }
+
+    .container {
+        max-width: 500px;
+        margin: auto;
+    }
+
+    .card {
+        background: white;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    input, button, select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    button {
+        background: #007bff;
+        color: white;
+        border: none;
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+    }
+
+    .btn-success {
+        background: #28a745;
+    }
+
+    .errorlist {
+        color: red;
+        margin: 5px 0;
+    }
+
+    label {
+        font-weight: bold;
+        margin-top: 10px;
+        display: block;
+    }
+
+    a.btn-link {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+        padding: 12px;
+        border-radius: 8px;
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+    }
     </style>
 </head>
+
 <body>
 
-<h2>Nuevo Paciente</h2>
+<div class="container">
 
-<form method="post">
-    {% csrf_token %}
+    <h2>Nuevo Paciente</h2>
 
-    {{ form.non_field_errors }}
+    <form method="post" class="card">
+        {% csrf_token %}
 
-    <label>Nombre</label>
-    {{ form.nombre }}
+        {{ form.non_field_errors }}
 
-    <label>Teléfono</label>
-    {{ form.telefono }}
+        <label>Nombre</label>
+        {{ form.nombre }}
 
-    <label>Email</label>
-    {{ form.email }}
+        <label>Teléfono</label>
+        {{ form.telefono }}
 
-    <label>Notas</label>
-    {{ form.notas }}
+        <label>Email</label>
+        {{ form.email }}
 
-    <label>Nacimiento</label>
-    {{ form.nacimiento }}
+        <label>Notas</label>
+        {{ form.notas }}
 
-    <button type="submit">Guardar</button>
-</form>
+        <label>Fecha de nacimiento</label>
+        {{ form.nacimiento }}
 
-<br>
-<a href="{% url 'agenda_hoy' %}">← Volver a agenda</a>
+        <button type="submit" class="btn-success">
+            Guardar paciente
+        </button>
+    </form>
+
+    <a href="{% url 'agregar_reserva' %}" class="btn-link">
+        ← Volver a reserva
+    </a>
+
+</div>
 
 </body>
 </html>
