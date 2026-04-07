@@ -10,6 +10,13 @@ from django.core.exceptions import ValidationError
 
 def agenda_hoy(request):
     fecha_str = request.GET.get("fecha")
+    hoy = date.today()
+
+    cumpleanos = Paciente.objects.filter(
+    nacimiento__day=hoy.day,
+    nacimiento__month=hoy.month
+)
+    
 
     if fecha_str:
         fecha = date.fromisoformat(fecha_str)
@@ -23,6 +30,7 @@ def agenda_hoy(request):
         "fecha": fecha,
         "fecha_anterior": fecha - timedelta(days=1),
         "fecha_siguiente": fecha + timedelta(days=1),
+        "cumpleanos": cumpleanos,
     })
 
 def marcar_asistio(request, reserva_id):
@@ -44,7 +52,7 @@ def agregar_reserva(request):
         if form.is_valid():
             paciente_id = request.POST.get("paciente")
 
-            # 🔥 VALIDACIÓN CLAVE
+            # VALIDACIÓN CLAVE
             if not paciente_id:
                 form.add_error(None, "Debes seleccionar un paciente válido")
             else:

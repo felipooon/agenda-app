@@ -74,10 +74,38 @@
         color: white;
         text-decoration: none;
     }
+
+    .nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.nav a {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    background: #6c757d;
+    color: white;
+    text-decoration: none;
+}
     </style>
 </head>
 
 <body>
+
+    <div class="nav">
+    <a href="{% url 'agenda_hoy' %}" class="btn-secondary">
+        📅 Agenda
+    </a>
+    <a href="{% url 'lista_pacientes' %}" class="btn-secondary">
+        👥 Pacientes
+    </a>
+    <a href="" class="btn-secondary">
+        📊 Reportes
+    </a>
+</div>
 
 <div class="container">
 
@@ -108,8 +136,8 @@
         </button>
     </form>
 
-    <a href="{% url 'agregar_reserva' %}" class="btn-link">
-        ← Volver a reserva
+    <a href="{% url 'agenda_hoy' %}" class="btn-link">
+        ← Volver a Agenda
     </a>
 
 </div>

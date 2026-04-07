@@ -4,10 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Agenda</title>
 
-    <form method="get">
-        <input type="date" name="fecha" value="{{ fecha|date:'Y-m-d' }}">
-        <button type="submit">Ver</button>
-    </form>
+    
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -67,7 +64,7 @@ button:active {
     background: #dc3545;
 }
 
-.nav {
+.navbtn {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
@@ -114,51 +111,70 @@ a {
     border-left: 5px solid orange;
 }
 
+.card-cumple {
+    background: #fff3cd;
+    border-left: 5px solid orange;
+}
+
+.nav {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.nav a {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    background: #6c757d;
+    color: white;
+    text-decoration: none;
+}
+
     </style>
 </head>
 <body>
-<!--
-<div class="header">
-    <h2>Agenda {{ fecha }}</h2>
-    <a href="{% url 'agregar_reserva' %}">➕ Nueva</a>
-    <a href="{% url 'crear_paciente' %}">👤 Nuevo paciente</a>
+
+<div class="nav">
+
+    <a href="{% url 'agenda_hoy' %}" class="btn-secondary">
+        📅 Agenda
+    </a>
+    <a href="{% url 'lista_pacientes' %}" class="btn-secondary">
+        👥 Pacientes
+    </a>
+    <a href="" class="btn-secondary">
+        📊 Reportes
+    </a>
+
 </div>
-
-{% if reservas %}
-    {% for reserva in reservas %}
-        <div class="reserva {{ reserva.estado }}">
-            <strong>{{ reserva.hora }}</strong><br>
-            {{ reserva.paciente.nombre }}<br>
-            Estado: {{ reserva.get_estado_display }}
-
-            {% if reserva.estado == "reservado" %}
-                <div class="botones">
-                    <a href="{% url 'marcar_asistio' reserva.id %}">✅</a>
-                    <a href="{% url 'marcar_no_asistio' reserva.id %}">❌</a>
-                </div>
-            {% endif %}
-        </div>
-    {% endfor %}
-{% else %}
-    <p>No hay reservas hoy</p>
-{% endif %}
-
-<a href="?fecha={{ fecha_anterior|date:'Y-m-d' }}">⬅ Día anterior</a>
-<a href="?fecha={{ fecha_siguiente|date:'Y-m-d' }}">Día siguiente ➡</a>
-    -->
 
 <div class="container">
 
+
 <h2>Agenda {{ fecha }}</h2>
 
+{% if cumpleanos %}
+<div class="card card-cumple" style="background:#fff3cd; border-left:5px solid orange;">
+    <strong>🎂 Cumpleaños hoy</strong><br><br>
+
+    {% for p in cumpleanos %}
+        🎉 {{ p.nombre }}<br>
+    {% endfor %}
+</div>
+{% endif %}
+
 <div class="nav">
-    <a href="?fecha={{ fecha_anterior|date:'Y-m-d' }}">⬅</a>
-    <a href="?fecha={{ fecha_siguiente|date:'Y-m-d' }}">➡</a>
+    <a href="?fecha={{ fecha_anterior|date:'Y-m-d' }}">⬅ Día Anterior</a>
+    <a href="?fecha={{ fecha_siguiente|date:'Y-m-d' }}">Día Siguiente➡</a>
 </div>
 
+<a>Seleccione una fecha para ver reservas:</a>
 <form method="get">
-    <input type="date" name="fecha" value="{{ fecha|date:'Y-m-d' }}">
-</form>
+        <input type="date" name="fecha" value="{{ fecha|date:'Y-m-d' }}">
+        <button type="submit">Ver</button>
+    </form>
 
 <a href="{% url 'agregar_reserva' %}">
     <button class="btn-success">+ Nueva reserva</button>

@@ -8,7 +8,7 @@ class Reserva(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     fecha = models.DateField()
     hora = models.TimeField()
-    duracion = models.IntegerField(default=30)  # duración en minutos
+    duracion = models.IntegerField(default=60)  # duración en minutos
 
     ESTADOS = [
         ("reservado", "Reservado"),

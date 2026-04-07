@@ -11,3 +11,9 @@ class Paciente(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+def total_reservas(self):
+    return self.reserva_set.count()
+
+def asistencias(self):
+    return self.reserva_set.filter(estado="asistio").count()

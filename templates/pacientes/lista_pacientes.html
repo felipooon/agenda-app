@@ -1,7 +1,9 @@
+<!DOCTYPE html>
+<html>
 <head>
+    <title>Lista de Pacientes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-
         body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -69,6 +71,38 @@ a {
     color: #007bff;
 }
 
+.paciente-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.paciente-header {
+    font-size: 18px;
+}
+
+.paciente-info {
+    color: #555;
+    font-size: 14px;
+}
+
+.paciente-stats {
+    background: #f8f9fa;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.paciente-actions a {
+    display: block;
+    text-align: center;
+    padding: 8px;
+    border-radius: 6px;
+    background: #6c757d;
+    color: white;
+    text-decoration: none;
+}
+
 .autocomplete-container {
     position: relative;
     width: 100%;
@@ -99,24 +133,6 @@ a {
     background-color: #f0f0f0;
 }
 
-button {
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 6px;
-        }
-
-a.btn-link {
-        display: block;
-        text-align: center;
-        margin-top: 10px;
-        padding: 12px;
-        border-radius: 8px;
-        background: #6c757d;
-        color: white;
-        text-decoration: none;
-    }
-
 .nav {
     display: flex;
     gap: 10px;
@@ -132,10 +148,11 @@ a.btn-link {
     color: white;
     text-decoration: none;
 }
-</style>
+    </style>
 </head>
+<body>
 
-<div class="nav">
+    <div class="nav">
     <a href="{% url 'agenda_hoy' %}" class="btn-secondary">
         📅 Agenda
     </a>
@@ -149,51 +166,50 @@ a.btn-link {
 
 <div class="container">
 
-
-
-<h1>Agregar Reserva</h1>
-
-<form method="post" class="card">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-
-    <label>Paciente</label>
+    <h2>Pacientes</h2>
 
     <div class="autocomplete-container">
-        <input type="text" id="buscar" placeholder="Buscar paciente...">
+        <input type="text" id="buscar" placeholder="Buscar Paciente...">
         <input type="hidden" name="paciente" id="paciente_id">
         <ul id="resultados"></ul>
     </div>
 
     <a href="{% url 'crear_paciente' %}">
-    <button type="button" class="btn-secondary">
+    <button type="button" class="button">
         + Nuevo paciente
     </button>
 </a>
 
-    <hr>
+</br>
+    {% for p in pacientes %}
+    <div class="card paciente-card">
 
-    <label>Fecha</label>
-    {{ form.fecha }}
+        <div class="paciente-header">
+            <strong>{{ p.nombre }}</strong>
+        </div>
 
-    <label>Hora</label>
-    {{ form.hora }}
+        <div class="paciente-info">
+            📞 {{ p.telefono|default:"Sin teléfono" }}<br>
+            ✉️ {{ p.email|default:"Sin email" }}
+        </div>
 
-    <label>Duración</label>
-    {{ form.duracion }}
+        <div class="paciente-stats">
+            🗓 {{ p.total_reservas }} reservas<br>
+            ✅ {{ p.asistencias }} asistencias
+        </div>
 
-    <button type="submit" class="btn-success">
-        Guardar reserva
-    </button>
+        <div class="paciente-actions">
+            <a href="#" class="btn-secondary">Ver</a>
+        </div>
 
-</form>
-
-<a href="{% url 'agenda_hoy' %}" class="btn-link" style="display:block; text-align:center; margin-top:10px;">
-    ← Volver
-</a>
+    </div>
+    {% empty %}
+        <p>No hay pacientes</p>
+    {% endfor %}
 
 </div>
 
+</body>
 
 <script>
 const input = document.getElementById("buscar");
@@ -266,3 +282,8 @@ document.addEventListener("click", (e) => {
     }
 });
 </script>
+
+</html>
+
+
+
