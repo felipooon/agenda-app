@@ -1,158 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Agenda</title>
+{% extends "base.html" %}
 
-    <style>
-        body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 15px;
-    background: #f5f5f5;
-}
+{% block title %}Agenda{% endblock %}
 
-h1, h2 {
-    margin-top: 0;
-}
-
-.container {
-    max-width: 500px;
-    margin: auto;
-}
-
-.card {
-    background: white;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-input, button, select {
-    width: 100%;
-    padding: 12px;
-    margin-top: 8px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-
-button {
-    background: #007bff;
-    color: white;
-    border: none;
-}
-
-button:active {
-    opacity: 0.8;
-}
-
-.btn-secondary {
-    background: #6c757d;
-}
-
-.btn-success {
-    background: #28a745;
-}
-
-.btn-danger {
-    background: #dc3545;
-}
-
-.navbtn {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-a {
-    text-decoration: none;
-    color: #007bff;
-}
-
-.estado-asistio {
-    background: green;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 6px;
-}
-
-.estado-no-asistio {
-    background: red;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 6px;
-}
-
-.estado-reservado {
-    background: orange;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 6px;
-}
-
-.card-asistio {
-    background-color: #d4edda; /* verde suave */
-    border-left: 5px solid green;
-}
-
-.card-no-asistio {
-    background-color: #f8d7da; /* rojo suave */
-    border-left: 5px solid red;
-}
-
-.card-reservado {
-    background-color: #fff3cd; /* amarillo suave */
-    border-left: 5px solid orange;
-}
-
-.card-cumple {
-    background: #fff3cd;
-    border-left: 5px solid orange;
-}
-
-.nav {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.nav a {
-    flex: 1;
-    text-align: center;
-    padding: 10px;
-    border-radius: 8px;
-    background: #6c757d;
-    color: white;
-    text-decoration: none;
-}
-
-    </style>
-</head>
-<body>
-
-<div class="nav">
-
-    <a href="{% url 'agenda_hoy' %}" class="btn-secondary">
-        📅 Agenda
-    </a>
-    <a href="{% url 'lista_pacientes' %}" class="btn-secondary">
-        👥 Pacientes
-    </a>
-    <a href="{% url 'reporte_general' %}" class="btn-secondary">
-        📊 Reportes
-    </a>
-</div>
-
-<div class="container">
-
+{% block content %}
 
 <h2>Agenda {{ fecha }}</h2>
 
 {% if cumpleanos %}
-<div class="card card-cumple" style="background:#fff3cd; border-left:5px solid orange;">
+<div class="card card-cumple">
     <strong>🎂 Cumpleaños hoy</strong><br><br>
 
     {% for p in cumpleanos %}
@@ -166,11 +21,12 @@ a {
     <a href="?fecha={{ fecha_siguiente|date:'Y-m-d' }}">Día Siguiente➡</a>
 </div>
 
-<a>Seleccione una fecha para ver reservas:</a>
+<p>Seleccione una fecha para ver reservas:</p>
+
 <form method="get">
-        <input type="date" name="fecha" value="{{ fecha|date:'Y-m-d' }}">
-        <button type="submit">Ver</button>
-    </form>
+    <input type="date" name="fecha" value="{{ fecha|date:'Y-m-d' }}">
+    <button type="submit">Ver</button>
+</form>
 
 <a href="{% url 'agregar_reserva' %}">
     <button class="btn-success">+ Nueva reserva</button>
@@ -191,7 +47,6 @@ card-reservado
     <strong>{{ r.hora }}</strong><br>
     {{ r.paciente }}<br>
     Estado: {{ r.get_estado_display }}
-</span>
 
     <div style="margin-top:10px;">
         <a href="{% url 'marcar_asistio' r.id %}">
@@ -206,7 +61,4 @@ card-reservado
 <p>No hay reservas</p>
 {% endfor %}
 
-</div>
-
-</body>
-</html>
+{% endblock %}

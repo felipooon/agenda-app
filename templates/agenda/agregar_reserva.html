@@ -1,74 +1,9 @@
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
+{% extends "base.html" %}
 
-        body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 15px;
-    background: #f5f5f5;
-}
+{% block title %}Agregar Reserva{% endblock %}
 
-h1, h2 {
-    margin-top: 0;
-}
-
-.container {
-    max-width: 500px;
-    margin: auto;
-}
-
-.card {
-    background: white;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-input, button, select {
-    width: 100%;
-    padding: 12px;
-    margin-top: 8px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-
-button {
-    background: #007bff;
-    color: white;
-    border: none;
-}
-
-button:active {
-    opacity: 0.8;
-}
-
-.btn-secondary {
-    background: #6c757d;
-}
-
-.btn-success {
-    background: #28a745;
-}
-
-.btn-danger {
-    background: #dc3545;
-}
-
-.nav {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-a {
-    text-decoration: none;
-    color: #007bff;
-}
-
+{% block extra_css %}
+<style>
 .autocomplete-container {
     position: relative;
     width: 100%;
@@ -76,7 +11,7 @@ a {
 
 #resultados {
     position: absolute;
-    top: 100%;              
+    top: 100%;
     left: 0;
     background: white;
     border: 1px solid #ccc;
@@ -86,7 +21,7 @@ a {
     list-style: none;
     padding: 0;
     margin: 0;
-    z-index: 9999;          
+    z-index: 9999;
     border-radius: 6px;
 }
 
@@ -99,57 +34,20 @@ a {
     background-color: #f0f0f0;
 }
 
-button {
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 6px;
-        }
-
 a.btn-link {
-        display: block;
-        text-align: center;
-        margin-top: 10px;
-        padding: 12px;
-        border-radius: 8px;
-        background: #6c757d;
-        color: white;
-        text-decoration: none;
-    }
-
-.nav {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.nav a {
-    flex: 1;
+    display: block;
     text-align: center;
-    padding: 10px;
+    margin-top: 10px;
+    padding: 12px;
     border-radius: 8px;
     background: #6c757d;
     color: white;
     text-decoration: none;
 }
 </style>
-</head>
+{% endblock %}
 
-<div class="nav">
-    <a href="{% url 'agenda_hoy' %}" class="btn-secondary">
-        📅 Agenda
-    </a>
-    <a href="{% url 'lista_pacientes' %}" class="btn-secondary">
-        👥 Pacientes
-    </a>
-    <a href="{% url 'reporte_general' %}" class="btn-secondary">
-        📊 Reportes
-    </a>
-</div>
-
-<div class="container">
-
-
+{% block content %}
 
 <h1>Agregar Reserva</h1>
 
@@ -165,10 +63,8 @@ a.btn-link {
         <ul id="resultados"></ul>
     </div>
 
-    <a href="{% url 'crear_paciente' %}">
-    <button type="button" class="btn-secondary">
-        + Nuevo paciente
-    </button>
+    <a href="{% url 'crear_paciente' %}" class="btn-secondary">
+    + Nuevo paciente
 </a>
 
     <hr>
@@ -185,28 +81,26 @@ a.btn-link {
     <button type="submit" class="btn-success">
         Guardar reserva
     </button>
-
 </form>
 
-<a href="{% url 'agenda_hoy' %}" class="btn-link" style="display:block; text-align:center; margin-top:10px;">
+<a href="{% url 'agenda_hoy' %}" class="btn-link">
     ← Volver
 </a>
 
-</div>
+{% endblock %}
 
-
+{% block extra_js %}
 <script>
 const input = document.getElementById("buscar");
 const resultados = document.getElementById("resultados");
 const pacienteId = document.getElementById("paciente_id");
-const mensaje = document.getElementById("mensaje"); // puede no existir
+const mensaje = document.getElementById("mensaje");
 
 if (input && resultados && pacienteId) {
 
     input.addEventListener("input", async () => {
         const query = input.value;
 
-        // 🔥 limpiar selección previa
         pacienteId.value = "";
 
         if (mensaje) {
@@ -259,10 +153,10 @@ if (input && resultados && pacienteId) {
     });
 }
 
-// 🔥 cerrar dropdown al hacer click fuera
 document.addEventListener("click", (e) => {
     if (!e.target.closest(".autocomplete-container")) {
         resultados.innerHTML = "";
     }
 });
 </script>
+{% endblock %}
