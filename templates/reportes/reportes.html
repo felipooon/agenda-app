@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Agenda</title>
+    <title>Reportes</title>
 
     <style>
         body {
@@ -134,7 +134,6 @@ a {
 <body>
 
 <div class="nav">
-
     <a href="{% url 'agenda_hoy' %}" class="btn-secondary">
         📅 Agenda
     </a>
@@ -148,63 +147,21 @@ a {
 
 <div class="container">
 
-
-<h2>Agenda {{ fecha }}</h2>
-
-{% if cumpleanos %}
-<div class="card card-cumple" style="background:#fff3cd; border-left:5px solid orange;">
-    <strong>🎂 Cumpleaños hoy</strong><br><br>
-
-    {% for p in cumpleanos %}
-        🎉 {{ p.nombre }}<br>
-    {% endfor %}
-</div>
-{% endif %}
-
-<div class="nav">
-    <a href="?fecha={{ fecha_anterior|date:'Y-m-d' }}">⬅ Día Anterior</a>
-    <a href="?fecha={{ fecha_siguiente|date:'Y-m-d' }}">Día Siguiente➡</a>
+    <div class="card">
+    👥 Pacientes: {{ total_pacientes }}
 </div>
 
-<a>Seleccione una fecha para ver reservas:</a>
-<form method="get">
-        <input type="date" name="fecha" value="{{ fecha|date:'Y-m-d' }}">
-        <button type="submit">Ver</button>
-    </form>
-
-<a href="{% url 'agregar_reserva' %}">
-    <button class="btn-success">+ Nueva reserva</button>
-</a>
-
-<hr>
-
-{% for r in reservas %}
-<div class="card 
-{% if r.estado == 'asistio' %}
-card-asistio
-{% elif r.estado == 'no_asistio' %}
-card-no-asistio
-{% else %}
-card-reservado
-{% endif %}
-">
-    <strong>{{ r.hora }}</strong><br>
-    {{ r.paciente }}<br>
-    Estado: {{ r.get_estado_display }}
-</span>
-
-    <div style="margin-top:10px;">
-        <a href="{% url 'marcar_asistio' r.id %}">
-            <button class="btn-success">✔</button>
-        </a>
-        <a href="{% url 'marcar_no_asistio' r.id %}">
-            <button class="btn-danger">✖</button>
-        </a>
-    </div>
+<div class="card">
+    🗓 Reservas: {{ total_reservas }}
 </div>
-{% empty %}
-<p>No hay reservas</p>
-{% endfor %}
+
+<div class="card">
+    ✅ Asistidas: {{ asistidas }}
+</div>
+
+<div class="card">
+    ❌ No asistidas: {{ no_asistidas }}
+</div>
 
 </div>
 

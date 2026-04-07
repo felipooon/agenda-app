@@ -8,6 +8,7 @@ from pacientes.models import Paciente
 from django.core.exceptions import ValidationError
 
 
+
 def agenda_hoy(request):
     fecha_str = request.GET.get("fecha")
     hoy = date.today()
@@ -90,3 +91,16 @@ def buscar_pacientes(request):
     return JsonResponse(data, safe=False)
 
     return render(request, "agenda/agregar_reserva.html", {"form": form})
+
+def reporte_general(request):
+    total_pacientes = Paciente.objects.count()
+    total_reservas = Reserva.objects.count()
+    asistidas = Reserva.objects.filter(estado="asistio").count()
+    no_asistidas = Reserva.objects.filter(estado="no_asistio").count()
+
+    return render(request, "reportes/reportes.html", {
+        "total_pacientes": total_pacientes,
+        "total_reservas": total_reservas,
+        "asistidas": asistidas,
+        "no_asistidas": no_asistidas,
+    })
