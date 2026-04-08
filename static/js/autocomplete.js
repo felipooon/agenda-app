@@ -5,7 +5,7 @@ function initAutocomplete(inputId, resultadosId, url, redirect = false) {
     if (!input || !resultados) return;
 
     input.addEventListener("input", async () => {
-        const query = input.value;
+        const query = input.value.trim();
 
         if (query.length < 2) {
             resultados.innerHTML = "";
@@ -18,29 +18,27 @@ function initAutocomplete(inputId, resultadosId, url, redirect = false) {
             if (!response.ok) throw new Error("Error en servidor");
 
             const data = await response.json();
-
             resultados.innerHTML = "";
 
-            if (data.length === 0) {
+            if (!data.length) {
                 resultados.innerHTML = "<li>No se encontraron resultados</li>";
                 return;
             }
 
             data.forEach(item => {
                 const li = document.createElement("li");
+                // Mostrar nombre + apellido
                 li.textContent = `${item.nombre} ${item.apellido || ""}`.trim();
 
                 li.onclick = () => {
-                    input.value = `${item.nombre} ${item.apellido || ""}`.trim();
-
-                    // limpiar dropdown
+                    input.value = `${item.nombre} ${item.apellido || ""}`.trim(); // ya viene como "nombre apellido"
                     resultados.innerHTML = "";
 
-                    // guardar ID en input hidden si existe
+                    // Guardar ID en input hidden si existe
                     const hidden = document.querySelector(`#${inputId}_id`);
                     if (hidden) hidden.value = item.id;
 
-                    // si redirect es true, recarga la lista con la query
+                    // Si redirect es true, recargar la lista de pacientes
                     if (redirect) {
                         window.location.href = `${window.location.pathname}?q=${encodeURIComponent(input.value)}`;
                     }
@@ -55,7 +53,7 @@ function initAutocomplete(inputId, resultadosId, url, redirect = false) {
         }
     });
 
-    // cerrar dropdown si se hace click fuera
+    // Cerrar dropdown al hacer click fuera
     document.addEventListener("click", (e) => {
         if (!e.target.closest(".autocomplete-container")) {
             resultados.innerHTML = "";

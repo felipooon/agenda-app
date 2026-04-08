@@ -1,5 +1,4 @@
 from datetime import date
-
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .forms import PacienteForm
@@ -54,14 +53,12 @@ def cumpleanos_hoy(request):
 def buscar_pacientes(request):
     query = request.GET.get("q", "")
     pacientes = Paciente.objects.filter(
-        Q(nombre__icontains=query) | Q(apellido__icontains=query) | Q(rut__icontains=query)
+        Q(nombre__icontains=query) | Q(apellido__icontains=query)
     )[:10]
 
+    # Devuelve nombre completo
     data = [
-        {"id": p.id, "nombre": f"{p.nombre} {p.apellido}"}  # mostrar nombre + apellido
+        {"id": p.id, "nombre": p.nombre, "apellido": p.apellido}
         for p in pacientes
     ]
-
     return JsonResponse(data, safe=False)
-
-    return render(request, "agenda/agregar_reserva.html", {"form": form})

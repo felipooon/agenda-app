@@ -48,6 +48,6 @@
 
 {% block extra_js %}
 <script>
-initAutocomplete("buscar", "resultados", "/buscar-pacientes/");
+initAutocomplete("buscar", "resultados", "{% url 'buscar_pacientes' %}");
 </script>
 {% endblock %}

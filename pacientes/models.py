@@ -4,7 +4,7 @@ from django.db import models
 
 class Paciente(models.Model):
     nombre = models.CharField(max_length=100)
-    apellido = models.CharField(max_length=100, blank=True)
+    apellido = models.CharField(max_length=100)
     rut = models.CharField(max_length=12, unique=True, null=True, blank=True)
 
     telefono = models.CharField(max_length=20)
