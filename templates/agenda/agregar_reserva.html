@@ -2,50 +2,7 @@
 
 {% block title %}Agregar Reserva{% endblock %}
 
-{% block extra_css %}
-<style>
-.autocomplete-container {
-    position: relative;
-    width: 100%;
-}
 
-#resultados {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: white;
-    border: 1px solid #ccc;
-    width: 100%;
-    max-height: 150px;
-    overflow-y: auto;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    z-index: 9999;
-    border-radius: 6px;
-}
-
-#resultados li {
-    padding: 10px;
-    cursor: pointer;
-}
-
-#resultados li:hover {
-    background-color: #f0f0f0;
-}
-
-a.btn-link {
-    display: block;
-    text-align: center;
-    margin-top: 10px;
-    padding: 12px;
-    border-radius: 8px;
-    background: #6c757d;
-    color: white;
-    text-decoration: none;
-}
-</style>
-{% endblock %}
 
 {% block content %}
 
@@ -59,8 +16,8 @@ a.btn-link {
 
     <div class="autocomplete-container">
         <input type="text" id="buscar" placeholder="Buscar paciente...">
-        <input type="hidden" name="paciente" id="paciente_id">
-        <ul id="resultados"></ul>
+        <input type="hidden" name="paciente" id="buscar_id">
+        <ul class="autocomplete-results" id="resultados"></ul>
     </div>
 
     <a href="{% url 'crear_paciente' %}" class="btn-secondary">
@@ -83,7 +40,7 @@ a.btn-link {
     </button>
 </form>
 
-<a href="{% url 'agenda_hoy' %}" class="btn-link">
+<a href="{% url 'agenda_hoy' %}" class="btn-secondary">
     ← Volver
 </a>
 
@@ -91,72 +48,6 @@ a.btn-link {
 
 {% block extra_js %}
 <script>
-const input = document.getElementById("buscar");
-const resultados = document.getElementById("resultados");
-const pacienteId = document.getElementById("paciente_id");
-const mensaje = document.getElementById("mensaje");
-
-if (input && resultados && pacienteId) {
-
-    input.addEventListener("input", async () => {
-        const query = input.value;
-
-        pacienteId.value = "";
-
-        if (mensaje) {
-            mensaje.textContent = "Debes seleccionar un paciente de la lista";
-        }
-
-        if (query.length < 2) {
-            resultados.innerHTML = "";
-            return;
-        }
-
-        try {
-            const response = await fetch(`/buscar-pacientes/?q=${query}`);
-
-            if (!response.ok) {
-                throw new Error("Error en la respuesta del servidor");
-            }
-
-            const data = await response.json();
-
-            resultados.innerHTML = "";
-
-            if (data.length === 0) {
-                resultados.innerHTML = "<li>No se encontraron pacientes</li>";
-                return;
-            }
-
-            data.forEach(p => {
-                const li = document.createElement("li");
-                li.textContent = p.nombre;
-
-                li.onclick = () => {
-                    input.value = p.nombre;
-                    pacienteId.value = p.id;
-
-                    if (mensaje) {
-                        mensaje.textContent = "";
-                    }
-
-                    resultados.innerHTML = "";
-                };
-
-                resultados.appendChild(li);
-            });
-
-        } catch (error) {
-            console.error("Error buscando pacientes:", error);
-            resultados.innerHTML = "<li>Error al buscar</li>";
-        }
-    });
-}
-
-document.addEventListener("click", (e) => {
-    if (!e.target.closest(".autocomplete-container")) {
-        resultados.innerHTML = "";
-    }
-});
+initAutocomplete("buscar", "resultados", "/buscar-pacientes/");
 </script>
 {% endblock %}
