@@ -9,4 +9,10 @@ class PacienteForm(forms.ModelForm):
 
     class Meta:
         model = Paciente
-        fields = ["nombre", "telefono", "email", "notas", "nacimiento"]
+        fields = ["nombre",
+                  "apellido",
+                  "rut",
+                  "telefono",
+                  "email",
+                  "notas",
+                  "nacimiento"]

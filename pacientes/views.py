@@ -21,17 +21,19 @@ def crear_paciente(request):
     return render(request, "pacientes/crear_paciente.html", {"form": form})
 
 def lista_pacientes(request):
-    query = request.GET.get("q")
+    query = request.GET.get("q", "")
 
     pacientes = Paciente.objects.all()
 
     if query:
-        pacientes = pacientes.filter(nombre__icontains=query)
+        pacientes = pacientes.filter(
+            Q(nombre__icontains=query) | Q(apellido__icontains=query) | Q(rut__icontains=query)
+        )
 
     pacientes = pacientes.annotate(
         total_reservas=Count('reserva'),
         asistencias=Count('reserva', filter=Q(reserva__estado="asistio"))
-    ).order_by("nombre")
+    ).order_by("apellido", "nombre")  # ahora ordenado por apellido
 
     return render(request, "pacientes/lista_pacientes.html", {
         "pacientes": pacientes
@@ -51,10 +53,12 @@ def cumpleanos_hoy(request):
 
 def buscar_pacientes(request):
     query = request.GET.get("q", "")
-    pacientes = Paciente.objects.filter(nombre__icontains=query)[:10]
+    pacientes = Paciente.objects.filter(
+        Q(nombre__icontains=query) | Q(apellido__icontains=query) | Q(rut__icontains=query)
+    )[:10]
 
     data = [
-        {"id": p.id, "nombre": p.nombre}
+        {"id": p.id, "nombre": f"{p.nombre} {p.apellido}"}  # mostrar nombre + apellido
         for p in pacientes
     ]
 

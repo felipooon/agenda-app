@@ -1,4 +1,4 @@
-function initAutocomplete(inputId, resultadosId, url) {
+function initAutocomplete(inputId, resultadosId, url, redirect = false) {
     const input = document.getElementById(inputId);
     const resultados = document.getElementById(resultadosId);
 
@@ -13,11 +13,9 @@ function initAutocomplete(inputId, resultadosId, url) {
         }
 
         try {
-            const response = await fetch(`${url}?q=${query}`);
+            const response = await fetch(`${url}?q=${encodeURIComponent(query)}`);
 
-            if (!response.ok) {
-                throw new Error("Error en servidor");
-            }
+            if (!response.ok) throw new Error("Error en servidor");
 
             const data = await response.json();
 
@@ -30,15 +28,22 @@ function initAutocomplete(inputId, resultadosId, url) {
 
             data.forEach(item => {
                 const li = document.createElement("li");
-                li.textContent = item.nombre;
+                li.textContent = `${item.nombre} ${item.apellido || ""}`.trim();
 
                 li.onclick = () => {
-                    input.value = item.nombre;
+                    input.value = `${item.nombre} ${item.apellido || ""}`.trim();
+
+                    // limpiar dropdown
                     resultados.innerHTML = "";
 
-                    // opcional: guardar ID si existe input hidden
+                    // guardar ID en input hidden si existe
                     const hidden = document.querySelector(`#${inputId}_id`);
                     if (hidden) hidden.value = item.id;
+
+                    // si redirect es true, recarga la lista con la query
+                    if (redirect) {
+                        window.location.href = `${window.location.pathname}?q=${encodeURIComponent(input.value)}`;
+                    }
                 };
 
                 resultados.appendChild(li);
@@ -50,7 +55,7 @@ function initAutocomplete(inputId, resultadosId, url) {
         }
     });
 
-    // cerrar dropdown
+    // cerrar dropdown si se hace click fuera
     document.addEventListener("click", (e) => {
         if (!e.target.closest(".autocomplete-container")) {
             resultados.innerHTML = "";

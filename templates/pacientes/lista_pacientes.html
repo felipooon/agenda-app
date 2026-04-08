@@ -58,7 +58,11 @@
 <div class="card paciente-card">
 
     <div class="paciente-header">
-        <strong>{{ p.nombre }}</strong>
+        <strong>{{ p.nombre }} {{ p.apellido }}</strong>
+    </div>
+
+    <div class="paciente-info">
+        {{ p.rut }}
     </div>
 
     <div class="paciente-info">
@@ -84,6 +88,6 @@
 
 {% block extra_js %}
 <script>
-initAutocomplete("buscar", "resultados", "/buscar-pacientes/");
+initAutocomplete("buscar", "resultados", "/buscar-pacientes/", true);
 </script>
 {% endblock %}
