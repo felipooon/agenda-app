@@ -6,7 +6,7 @@ from .forms import ReservaForm
 from django.http import JsonResponse
 from pacientes.models import Paciente
 from django.core.exceptions import ValidationError
-
+from django.db.models import Q
 
 
 def agenda_hoy(request):
@@ -81,16 +81,18 @@ def agregar_reserva(request):
 
 def buscar_pacientes(request):
     query = request.GET.get("q", "")
-    pacientes = Paciente.objects.filter(nombre__icontains=query)[:10]
+    pacientes = Paciente.objects.filter(
+        Q(nombre__icontains=query) |
+        Q(apellido__icontains=query) |
+        Q(nombre__icontains=query.split()[0]) if query.split() else Q()  # Primera palabra
+    ).distinct()[:10]
 
     data = [
-        {"id": p.id, "nombre": p.nombre}
+        {"id": p.id, "nombre": p.nombre + " " + p.apellido}
         for p in pacientes
     ]
 
     return JsonResponse(data, safe=False)
-
-    return render(request, "agenda/agregar_reserva.html", {"form": form})
 
 def reporte_general(request):
     total_pacientes = Paciente.objects.count()
