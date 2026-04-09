@@ -25,9 +25,12 @@ def lista_pacientes(request):
     pacientes = Paciente.objects.all()
 
     if query:
-        pacientes = pacientes.filter(
-            Q(nombre__icontains=query) | Q(apellido__icontains=query) | Q(rut__icontains=query)
-        )
+        pacientes = Paciente.objects.filter(
+            Q(rut__icontains=query) |
+            Q(nombre__icontains=query) |
+            Q(apellido__icontains=query) |
+            Q(nombre__icontains=query.split()[0]) if query.split() else Q()  # Primera palabra
+        ).distinct()
 
     pacientes = pacientes.annotate(
         total_reservas=Count('reserva'),
