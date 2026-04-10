@@ -11,18 +11,68 @@
 
 <body>
 
-    <!-- NAV GLOBAL -->
-    <div class="nav">
-        <a href="{% url 'agenda_hoy' %}">📅 Agenda</a>
-        <a href="{% url 'lista_pacientes' %}">👥 Pacientes</a>
-        <a href="{% url 'reporte_general' %}">📊 Reportes</a>
-    </div>
+<!-- SIDEBAR DESKTOP -->
+<div class="sidebar">
+    <a href="{% url 'agenda_hoy' %}" 
+       class="nav-item {% if request.resolver_match.url_name == 'agenda_hoy' %}active{% endif %}">
+        <span class="icon">📅</span>
+        <span class="label">Agenda</span>
+    </a>
+
+    <a href="{% url 'lista_pacientes' %}" 
+       class="nav-item {% if request.resolver_match.url_name == 'lista_pacientes' %}active{% endif %}">
+        <span class="icon">👥</span>
+        <span class="label">Pacientes</span>
+    </a>
+
+    <a href="{% url 'reporte_general' %}" 
+       class="nav-item {% if request.resolver_match.url_name == 'reporte_general' %}active{% endif %}">
+        <span class="icon">📊</span>
+        <span class="label">Reportes</span>
+    </a>
+
+    <a href="#" class="nav-item">
+        <span class="icon">☰</span>
+        <span class="label">Menú</span>
+    </a>
+</div>
 
     <!-- CONTENIDO -->
     <div class="container">
         {% block content %}
         {% endblock %}
     </div>
+
+    <!-- NAV MOBILE -->
+
+<div class="bottom-nav">
+
+    <a href="{% url 'agenda_hoy' %}" class="nav-item {% if request.resolver_match.url_name == 'agenda_hoy' %}active{% endif %}" >
+        <span class="icon">📅</span>
+        <span class="label">Agenda</span>
+    </a>
+
+    <a href="{% url 'lista_pacientes' %}" class="nav-item {% if request.resolver_match.url_name == 'lista_pacientes' %}active{% endif %}">
+        <span class="icon">👥</span>
+        <span class="label">Pacientes</span>
+    </a>
+
+    <!-- FAB en el centro -->
+    <div class="nav-center">
+        <a href="{% url 'agregar_reserva' %}" class="fab">➕</a>
+    </div>
+
+    <a href="{% url 'reporte_general' %}" class="nav-item {% if request.resolver_match.url_name == 'reporte_general' %}active{% endif %}">
+        <span class="icon">📊</span>
+        <span class="label">Reportes</span>
+    </a>
+
+    <a href="#" class="nav-item">
+        <span class="icon">☰</span>
+        <span class="label">Menú</span>
+    </a>
+
+</div>
 
     <!-- SCRIPTS -->
     <script src="{% static 'js/autocomplete.js' %}"></script>
