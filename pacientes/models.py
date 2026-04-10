@@ -20,3 +20,8 @@ def total_reservas(self):
 
 def asistencias(self):
     return self.reserva_set.filter(estado="asistio").count()
+
+class NotaPaciente(models.Model):
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='notas_historial')
+    contenido = models.TextField()
+    fecha = models.DateTimeField(auto_now_add=True)

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Ficha paciente{% endblock %}
+
+{% block extra_css %}
+<style>
+textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 14px;
+    font-size: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    resize: vertical;
+    line-height: 1.4;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<h2>Ficha del paciente</h2>
+
+<!-- 🟢 Información general -->
+<div class="card">
+
+    <h3>Información general</h3>
+
+    <p><strong>Nombre:</strong> {{ paciente.nombre }} {{ paciente.apellido }}</p>
+
+    <p><strong>RUT:</strong> {{ paciente.rut }}</p>
+
+    <p><strong>Teléfono:</strong> {{ paciente.telefono|default:"No registrado" }}</p>
+
+    <p><strong>Email:</strong> {{ paciente.email|default:"No registrado" }}</p>
+
+</div>
+
+<!-- 🔵 Agregar nota -->
+<div class="card">
+    <h3>Agregar nota</h3>
+
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="contenido" placeholder="Escribe una nota clínica del paciente..." required></textarea>
+        <button type="submit">Guardar nota</button>
+    </form>
+</div>
+
+<!-- 🟣 Historial -->
+<div class="card">
+    <h3>Historial de notas</h3>
+
+    <p><strong>Nota inicial:</strong></p>
+    <p>{{ paciente.notas|default:"Sin nota inicial" }}</p>
+
+    {% for nota in notas %}
+        <div class="card" style="margin-top: 10px;">
+            <small>{{ nota.fecha|date:"d/m/Y H:i" }}</small>
+            <p>{{ nota.contenido }}</p>
+        </div>
+    {% empty %}
+        <p>No hay notas registradas.</p>
+    {% endfor %}
+</div>
+
+<!-- 🔙 Volver -->
+<a href="{% url 'lista_pacientes' %}" class="btn-secondary">Volver</a>
+
+{% endblock %}
