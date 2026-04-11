@@ -291,6 +291,10 @@ body {
     }
 }
 
+.container {
+padding-bottom: 90px;
+}
+
 /* DESKTOP */
 @media (min-width: 768px) {
     .bottom-nav {
